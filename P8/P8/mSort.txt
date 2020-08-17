@@ -1,0 +1,172 @@
+1.Introducción:
+El objetivo de la práctica es analizar y comparar los tiempos de ejecucion de tres algoritmos diferentes de ordenacion propias con las de los módulos List, Array y
+Sort.
+
+2. Contexto:
+
+La ejecución del análisis se realiza bajo un ordenador personal con sistema operativo Archlinux de 64 bits bajo un procesador "Intel® Core™ i5-2430M CPU @ 2.40GHz × 4" y 6Gb de memoria RAM. La medición de tiempos se realiza en segundos.
+
+3. Funciones auxiliares y de medición:
+
+let rlist r n =
+    let rec aux r n resul =
+        if (n > 0) then aux r (n-1) (Random.int r::resul)
+        else resul
+    in aux r n [];;
+
+let crono f a b =
+    let t = Sys.time () in
+       let _ = f a b in
+       Sys.time () -. t;;
+
+let rec rep f a b n =
+   if n != 0 then
+      let x = f a b in
+         rep f a b (n-1)
+   else
+      ();;
+
+let time f a b n =
+   let t0 = Sys.time()  in
+      let _ = rep f a b n in
+         (Sys.time() -. t0) /. Pervasives.float(n);;
+
+
+4. Creacion de listas y arrays:
+
+let l1 = rlist 1000 10000;;
+let l2 = rlist 2000 20000;;
+let l3 = rlist 4000 40000;;
+let l4 = rlist 8000 80000;;
+let l5 = rlist 16000 160000;;
+
+let a1 = Array.of_list l1;;
+let a2 = Array.of_list l2;;
+let a3 = Array.of_list l3;;
+let a4 = Array.of_list l4;;
+let a5 = Array.of_list l5;;
+
+5. Codigo de los tests: 
+
+(*Código movido al final del archivo para la mejor lectura del informe).
+
+6. tablas de tiempos:
+   
+ n     (lsort propio)    (List.sort)      (Sort.list)
+10000	 0.02523332	  0.01460000	  0.01426666	
+20000	 0.05696666	  0.03210000	  0.03196666
+40000	 0.11866630	  0.06739999	  0.07939999
+80000	 0.26886666	  0.15126666	  0.20003331
+160000	 0.59696661	  0.3492999	Stack overflow
+
+
+   
+ n     (asort propio)    (Array.sort)     (Sort.array)
+10000	 0.03100000	  0.0366669	  0.01000000	
+20000	 0.07666600	  0.0733340	  0.02333299	
+40000	 0.16333390	  0.1500000	  0.04666600
+80000	 0.34333300	  0.3099990	  0.09333399
+160000	 0.72666691	  0.6533330	  0.18666699
+
+
+
+7. Conclusion:
+
+En general vemos que la ordenación de listas tiene un rendimiento mayor que la ordenación de arrays. Podemos concluir que las funciones del módulo Sort son las más rápidas, aunque vemos que en el caso de listas, y con grandes volúmenes de datos nos salta un Stack overflow, por lo que tal vez no sea siempre la más adecuada de utilizar, y haya que decidir en función del contexto, aunque usando alguna otra función aumentemos el tiempo de ejecución. Podemos concluir también que nuestras funciones son las más lentas en todos los casos.
+
+*4:
+
+(* Tests *)
+"---------> lsort con n=10000 numeros (media de 100 veces)";;
+time lsort (<=) l1 100;;
+"---------> List.sort con n=10000 numeros (media de 100 veces)";;
+time List.sort compare l1 100;;
+"---------> Sort.list con n=10000 numeros (media de 100 veces)";;
+time Sort.list (<=) l1 100;;
+
+"---------> asort con n=10000";;
+crono asort (<=) a1;;
+"---------> Array.sort con n=10000";;
+crono Array.sort compare a1;;
+"---------> Sort.array con n=10000";;
+crono Sort.array (<=) a1;;
+;;
+
+
+
+
+(* Tests *)
+"---------> lsort con n=20000 numeros (media de 100 veces)";;
+time lsort (<=) l2 100;;
+"---------> List.sort con n=20000 numeros (media de 100 veces)";;
+time List.sort compare l2 100;;
+"---------> Sort.list con n=20000 numeros (media de 100 veces)";;
+time Sort.list (<=) l2 100;;
+
+"---------> asort con n=20000";;
+crono asort (<=) a2;;
+"---------> Array.sort con n=20000";;
+crono Array.sort compare a2;;
+"---------> Sort.array con n=20000";;
+crono Sort.array (<=) a2;;
+
+
+
+
+
+(* Tests *)
+"---------> lsort con n=40000 numeros (media de 100 veces)";;
+time lsort (<=) l3 100;;
+"---------> List.sort con n=40000 numeros (media de 100 veces)";;
+time List.sort compare l3 100;;
+"---------> Sort.list con n=40000 numeros (media de 100 veces)";;
+time Sort.list (<=) l3 100;;
+
+"---------> asort con n=40000";;
+crono asort (<=) a3;;
+"---------> Array.sort con n=40000";;
+crono Array.sort compare a3;;
+"---------> Sort.array con n=40000";;
+crono Sort.array (<=) a3;;
+
+
+
+
+
+(* Tests *)
+"---------> lsort con n=80000 numeros (media de 100 veces)";;
+time lsort (<=) l4 100;;
+"---------> List.sort con n=80000 numeros (media de 100 veces)";;
+time List.sort compare l4 100;;
+"---------> Sort.list con n=80000 numeros (media de 100 veces)";;
+time Sort.list (<=) l4 100;;
+
+"---------> asort con n=80000";;
+crono asort (<=) a4;;
+"---------> Array.sort con n=80000";;
+crono Array.sort compare a4;;
+"---------> Sort.array con n=80000";;
+crono Sort.array (<=) a4;;
+
+
+
+
+
+(* Tests *)
+"---------> lsort con n=160000 numeros (media de 100 veces)";;
+time lsort (<=) l5 100;;
+"---------> List.sort con n=160000 numeros (media de 100 veces)";;
+time List.sort compare l5 100;;
+"---------> Sort.list con n=160000 numeros (media de 100 veces)";;
+time Sort.list (<=) l5 100;;
+
+"---------> asort con n=160000";;
+crono asort (<=) a5;;
+"---------> Array.sort con n=160000";;
+crono Array.sort compare a5;;
+"---------> Sort.array con n=160000";;
+crono Sort.array (<=) a5;;
+
+
+
+
